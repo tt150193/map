@@ -40,7 +40,7 @@ app.get("/", (req, res)=>{
 app.post("/getcode", (req, res)=>{
     if(db){
         var collection = db.collection('productbarcodes');
-        collection.find({"code": req.body.code}).toArray(function(e, r){
+        collection.find({"code": {'$regex': '.*' + req.body.code + '.*'}}).toArray(function(e, r){
             res.send({
                 message: "OK",
                 data: r

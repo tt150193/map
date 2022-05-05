@@ -13,7 +13,10 @@
             <!-- header -->
             <h5>Tìm thấy: {{result.length}} mã.</h5>
         </div>
-        <div v-for="product in result">
+        <div v-for="product, index in result"
+            class="border border-success p-3 rounded my-2"
+        >
+            <h2>[{{index+1}}] - {{product.code}}</h2>
             <p>Sản phẩm: {{product.productName}}</p>
             <p>Mã kiot: {{product.productCode}}</p>
             <table class="table">
