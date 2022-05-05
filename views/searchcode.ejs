@@ -1,0 +1,79 @@
+<div id="appSearchCode">
+    <div class="text-center">
+        <input
+            class="form-control"
+            placeholder="Nhập code vào đây"
+            v-model="inpCode"
+            v-on:keyup.enter="search()"
+        >
+        <button @click="search()" class="btn btn-primary my-3">Tìm</button>
+    </div>
+    <div class="border border-primary p-3 rounded">
+        <div class="">
+            <!-- header -->
+            <h5>Tìm thấy: {{result.length}} mã.</h5>
+        </div>
+        <div v-for="product in result">
+            <p>Sản phẩm: {{product.productName}}</p>
+            <p>Mã kiot: {{product.productCode}}</p>
+            <table class="table">
+                <tr>
+                    <td>Mã hoá đơn</td>
+                    <td>Ngày xuất</td>
+                </tr>
+                <tr v-for="info in product.infos">
+                    <td>{{info.code}}</td>
+                    <td>{{info.date}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    const storeSearchCode = new Vuex.Store({
+        state: {
+            result: []
+        },
+        mutations: {
+            updateResult(state, payload){
+                state.result = payload;
+            }
+        },
+        actions: {
+            searchCode(context, payload){
+                console.log("Search Code");
+                jQuery.post("/getcode", {
+                    "query": "db",
+                    "code": payload
+                }, function(d){
+                    if(d.message == "OK"){
+                        context.commit("updateResult", d.data);
+                    } else {
+
+                    }
+                })
+            }   
+        }
+    });
+
+    var appSearchCode = new Vue({
+        el: "#appSearchCode",
+        store: storeSearchCode,
+        data: {
+            inpCode: ""
+        },
+        computed: {
+            result(){
+                return this.$store.state.result;
+            }
+        },
+        methods: {
+            search(){
+                this.$store.dispatch("searchCode", this.inpCode);
+            }
+        },
+        created(){
+
+        }
+    })
+</script>
